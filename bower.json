@@ -1,0 +1,17 @@
+{
+    "name": "udot-pel",
+    "version": "0.5.0",
+    "dependencies": {
+        "dojo": "1.9",
+        "dojox": "1.9",
+        "dijit": "1.9",
+        "util": "dojo-util#1.9",
+        "bootstrap": "~3.1",
+        "agrc": "agrc-widgets#*",
+        "ijit": "agrc-ijit#*",
+        "jquery": "~1",
+        "matchers": "agrc-jasmine-matchers#~0.1",
+        "jasmine-favicon-reporter": "*",
+        "stubmodule": "~0.4"
+    }
+}
