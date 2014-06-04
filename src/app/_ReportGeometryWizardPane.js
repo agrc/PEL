@@ -67,7 +67,7 @@ define([
         },
         postCreate: function() {
             // summary:
-            //       This is fired after all properties of a widget are defined, 
+            //       This is fired after all properties of a widget are defined,
             //       and the document fragment representing the widget is created—but
             //       before the fragment itself is added to the main document.
             console.log('app._ReportGeometryWizardPane::postCreate', arguments);
@@ -95,7 +95,7 @@ define([
         setupDisplay: function() {
             // summary:
             //      hides and shows nodes in the pane
-            // 
+            //
             console.log('app._ReportGeometryWizardPane::setupDisplay', arguments);
 
             domClass.add(this.shapefileGroup, 'hidden');
@@ -113,7 +113,7 @@ define([
         isValid: function() {
             // summary:
             //      validation without events or ui updates
-            // 
+            //
             console.log('app._ReportGeometryWizardPane::isValid', arguments);
 
             var valid = this.validate();
@@ -144,7 +144,7 @@ define([
         validateAsShapefile: function() {
             // summary:
             //      validates the pane when shapefiles are selected
-            // 
+            //
             console.log('app._ReportGeometryWizardPane::validateAsShapefile', arguments);
 
             var file = this.reportParams.get('zip'),
@@ -175,7 +175,9 @@ define([
             }
 
             //update ui
-            var css = this.reportParams.get('geometry') === null ? 'glyphicon-exclamation-sign red' : 'glyphicon-ok-sign green';
+            var css = this.reportParams.get('geometry') === null ?
+                'glyphicon-exclamation-sign red' :
+                'glyphicon-ok-sign green';
             domClass.replace(this.geometryStatus, 'glyphicon ' + css);
 
             if (!geometry || buffer < 1) {
@@ -190,7 +192,8 @@ define([
 
             if (!acceptableArea) {
                 var percentOver = ((area - AGRC.extentMaxArea) / area) * 100;
-                this.geometryText.innerHTML = 'Shape is too large. Reduce your shape by ' + Math.round(percentOver * 100) / 100 + '%.';
+                this.geometryText.innerHTML = 'Shape is too large. Reduce your shape by ' +
+                    Math.round(percentOver * 100) / 100 + '%.';
 
                 return false;
             }
@@ -235,7 +238,7 @@ define([
         uploadFile: function() {
             // summary:
             //      uploads the file to the gp service
-            // 
+            //
             console.log('app._ReportGeometryWizardPane::uploadFile', arguments);
 
             domClass.add(this.uploadActitvity, 'progress progress-striped active');
@@ -244,34 +247,35 @@ define([
                 url: AGRC.urls.uploadUrl,
                 form: this.uploadForm,
                 content: {
-                    f: "json"
+                    f: 'json'
                 },
-                handleAs: "json"
+                handleAs: 'json'
             }).then(lang.hitch(this, '_setUploadedFileId'),
                 lang.hitch(this, '_uploadError'));
         },
         _setUploadedFileId: function(response) {
             // summary:
-            //      sets the 
+            //      sets the
             // response
             // {
-            // "success": true,
-            // "item": {
-            //     "itemID": "iad35b26f-8f2a-410b-aa55-0542d7bbb3b2",
-            //     "itemName": "KaneAddressPoints.zip",
-            //     "description": null,
-            //     "date": 1384453020224,
-            //     "committed": true
+            // 'success': true,
+            // 'item': {
+            //     'itemID': 'iad35b26f-8f2a-410b-aa55-0542d7bbb3b2',
+            //     'itemName': 'KaneAddressPoints.zip',
+            //     'description': null,
+            //     'date': 1384453020224,
+            //     'committed': true
             // }
             console.log('app._ReportGeometryWizardPane::_setUploadedFileId', arguments);
 
             domClass.remove(this.uploadActitvity, 'progress progress-striped active');
 
-            if (!response.success)
+            if (!response.success) {
                 return;
+            }
 
             for (var prop in response.item) {
-                if (prop != 'itemID') {
+                if (prop !== 'itemID') {
                     delete response.item[prop];
                 }
             }
@@ -315,7 +319,7 @@ define([
         onHide: function() {
             // summary:
             //      performs actions when pane is hidden
-            // 
+            //
             console.log('app._ReportGeometryWizardPane::onHide', arguments);
 
             topic.publish('app/enable-tool');
