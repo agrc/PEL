@@ -1,5 +1,5 @@
 define([
-    'dojo/text!app/templates/GeometryFromRouteTemplate.html',
+    'dojo/text!./templates/GeometryFromRouteTemplate.html',
 
     'dojo/_base/declare',
     'dojo/_base/lang',
@@ -19,7 +19,7 @@ define([
     'esri/graphic',
     'esri/symbols/SimpleLineSymbol',
 
-    'app/data/routes',
+    './data/routes',
 
     'jquery/jquery'
 ], function(
@@ -198,6 +198,8 @@ define([
                     this.gp.getResultData(status.jobInfo.jobId, 'routeSegment',
                         function() {
                             //success
+
+                            return;
                         },
                         lang.hitch(this,
                             function(eb) {

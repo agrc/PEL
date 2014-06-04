@@ -25,8 +25,8 @@ require([
     describe('app/_ReportGeometryWizardPane', function() {
         var testWidget,
             goodPolyline = new Geometry({
-                "type": "polyline",
-                "paths": [
+                'type': 'polyline',
+                'paths': [
                     [
                         [242994.6799999997, 4514126.4399999995],
                         [243094, 4514138.92],
@@ -100,22 +100,22 @@ require([
                         [250811.23000000045, 4514150.75]
                     ]
                 ],
-                "_path": 0,
-                "spatialReference": {
-                    "wkid": 26912,
-                    "latestWkid": 26912
+                '_path': 0,
+                'spatialReference': {
+                    'wkid': 26912,
+                    'latestWkid': 26912
                 },
-                "_extent": {
-                    "xmin": 242994.6799999997,
-                    "ymin": 4514126.4399999995,
-                    "xmax": 250811.23000000045,
-                    "ymax": 4515030.01,
-                    "spatialReference": {
-                        "wkid": 26912,
-                        "latestWkid": 26912
+                '_extent': {
+                    'xmin': 242994.6799999997,
+                    'ymin': 4514126.4399999995,
+                    'xmax': 250811.23000000045,
+                    'ymax': 4515030.01,
+                    'spatialReference': {
+                        'wkid': 26912,
+                        'latestWkid': 26912
                     }
                 },
-                "_partwise": null
+                '_partwise': null
             });
 
         beforeEach(function() {

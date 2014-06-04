@@ -1,5 +1,5 @@
 define([
-    'dojo/text!app/templates/ReportGeneratorWizard.html',
+    'dojo/text!./templates/ReportGeneratorWizard.html',
 
     'dojo/_base/declare',
     'dojo/_base/lang',
@@ -76,8 +76,8 @@ define([
             console.log('app.ReportGeneratorWizard::setupWizard', arguments);
 
             var reportTypePane = new TypePane({
-                parentWidget: this
-            }, this.cp1),
+                    parentWidget: this
+                }, this.cp1),
 
                 geometryPane = new GeometryPane({
                     parentWidget: this
@@ -144,7 +144,7 @@ define([
             array.forEach(this.panes, function(pane) {
                 for (var x in pane.reportParams) {
                     if (pane.reportParams.hasOwnProperty(x) &&
-                        x != '_watchCallbacks' && !lang.isFunction(pane.reportParams[x])) {
+                        x !== '_watchCallbacks' && !lang.isFunction(pane.reportParams[x])) {
                         data[x] = pane.reportParams.get(x);
                     }
                 }
@@ -159,11 +159,11 @@ define([
             //      the data collected from the wizard panes
             console.log('app.ReportGeneratorWizard::transformData', arguments);
             var sourceOptions = {
-                noData: 0,
-                shapefile: 1,
-                folderWithShapefiles: 2,
-                userDrawn: 3
-            },
+                    noData: 0,
+                    shapefile: 1,
+                    folderWithShapefiles: 2,
+                    userDrawn: 3
+                },
                 inputFields = {
                     normal: 0,
                     userInput: 1,
@@ -178,6 +178,7 @@ define([
                 graphic = null,
                 featureSet = null;
 
+            /* jshint -W106 */
             var gpObject = {
                 Project_Name: reportName,
                 Project_ID: prjID,
@@ -188,6 +189,7 @@ define([
                 Input_Fields: inputFields.userInput,
                 Planner: this.planner.email
             };
+            /* jshint +W106 */
 
             if (data.geometry) {
                 graphic = new Graphic(data.geometry);
@@ -195,7 +197,7 @@ define([
 
                 features.push(graphic);
                 featureSet.features = features;
-
+                /* jshint -W106 */
                 gpObject.Dynamic_Project_Drawing = featureSet;
 
                 if (graphic.geometry.type === 'polyline') {
@@ -204,14 +206,17 @@ define([
                     gpObject.Polygon_Source_Option = sourceOptions.noData;
                     gpObject.Input_Fields = inputFields.userInput;
                 }
-
+                /* jshint +W106 */
                 return gpObject;
             } else {
                 //send both as shapefile and figure out in python gp.
+                /* jshint -W106 */
                 gpObject.Line_Source_Option = sourceOptions.shapefile;
                 gpObject.Polygon_Source_Option = sourceOptions.shapefile;
                 gpObject.zip = data.zip;
+                /* jshint +W106 */
             }
+
             return gpObject;
         },
         initReportType: function(data) {

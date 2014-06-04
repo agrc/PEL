@@ -17,7 +17,7 @@ require([
             var testWidget;
             beforeEach(function() {
                 testWidget = new WidgetUnderTest({
-                    url: "http://localhost/arcgis/rest/services/PEL/MilepostSegment/GPServer/Milepost_Segment"
+                    url: 'http://localhost/arcgis/rest/services/PEL/MilepostSegment/GPServer/Milepost_Segment'
                 }, domConstruct.create('div', {}, win.body()));
                 testWidget.startup();
             });
@@ -40,9 +40,9 @@ require([
 
                     testWidget.gpComplete({
                         jobInfo: {
-                            "jobId": "j3ceabe28199c4529b635cadfde999b68",
-                            "jobStatus": "esriJobFailed",
-                            "messages": ['something went wrong']
+                            'jobId': 'j3ceabe28199c4529b635cadfde999b68',
+                            'jobStatus': 'esriJobFailed',
+                            'messages': ['something went wrong']
                         }
                     });
 

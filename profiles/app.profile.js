@@ -13,7 +13,6 @@ var profile = {
             include: [
                 'dojo/i18n',
                 'dojo/domReady',
-                'app/main',
                 'app/run',
                 'esri/dijit/Attribution',
                 'spin'
@@ -29,11 +28,13 @@ var profile = {
         }
     },
     staticHasFeatures: {
-        // The trace & log APIs are used for debugging the loader, so we don’t need them in the build
+        // The trace & log APIs are used for debugging the loader,
+        // so we don’t need them in the build
         'dojo-trace-api': 0,
         'dojo-log-api': 0,
 
-        // This causes normally private loader data to be exposed for debugging, so we don’t need that either
+        // This causes normally private loader data to be exposed
+        // for debugging, so we don’t need that either
         'dojo-publish-privates': 0,
 
         // We’re fully async, so get rid of the legacy loader
@@ -45,27 +46,25 @@ var profile = {
         // We aren’t loading tests in production
         'dojo-test-sniff': 0
     },
-    packages: [
-        {
-            name: 'dojo',
-            location: 'dojo'
-        }, {
-            name: 'dijit',
-            location: 'dijit'
-        }, {
-            name: 'dojox',
-            location: 'dojox'
-        }, {
-            name: 'esri',
-            location: 'esri',
-            resourceTags: {
-                amd: function(filename, mid) {
-                    return (/.*\.js/).test(filename);
-                }
+    packages: [{
+        name: 'dojo',
+        location: 'dojo'
+    }, {
+        name: 'dijit',
+        location: 'dijit'
+    }, {
+        name: 'dojox',
+        location: 'dojox'
+    }, {
+        name: 'esri',
+        location: 'esri',
+        resourceTags: {
+            amd: function(filename, mid) {
+                return (/.*\.js/).test(filename);
             }
         }
-    ],
+    }],
     aliases: [
         ['spin', 'agrc/resources/libs/spin']
-    ] 
+    ]
 };

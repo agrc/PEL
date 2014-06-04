@@ -1,10 +1,10 @@
 define([
-    'dojo/text!app/templates/App.html',
+    'dojo/text!./templates/App.html',
 
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/Color',
-    'dojo/_base/window',
+    'dojo/_base/array',
 
     'dojo/topic',
     'dojo/aspect',
@@ -26,8 +26,10 @@ define([
     'ijit/widgets/layout/SideBarToggler',
     'ijit/widgets/authentication/LoginRegister',
 
-    'app/ReportGeneratorWizard',
-    'app/GeometryFromRoute',
+    './config',
+    './ReportGeneratorWizard',
+    './GeometryFromRoute',
+
 
     //no mapping
     'dijit/layout/BorderContainer',
@@ -38,7 +40,7 @@ define([
     declare,
     lang,
     Color,
-    win,
+    array,
 
     topic,
     aspect,
@@ -60,6 +62,7 @@ define([
     SideBarToggler,
     LoginRegister,
 
+    config,
     Wizard,
     GeometryFromRoute
 ) {
@@ -84,7 +87,7 @@ define([
             //      first function to fire after page loads
             console.info('app.app::constructor', arguments);
 
-            AGRC.app = this;
+            config.app = this;
 
             this.inherited(arguments);
         },
@@ -94,20 +97,13 @@ define([
             console.log('app.app::postCreate', arguments);
 
             // set version number
-            this.version.innerHTML = AGRC.version;
-
-            this.inherited(arguments);
+            this.version.innerHTML = config.version;
 
             this.login = new LoginRegister({
-                appName: AGRC.appName,
+                appName: config.appName,
                 logoutDiv: this.logoutDiv,
-                securedServicesBaseUrl: AGRC.urls.baseUrl
+                securedServicesBaseUrl: config.urls.baseUrl
             });
-        },
-        startup: function() {
-            // summary:
-            //      Fires after postCreate when all of the child widgets are finished laying out.
-            console.log('app.app::startup', arguments);
 
             var toggler,
                 geocoder,
@@ -117,47 +113,57 @@ define([
 
             this.initMap();
 
-            toggler = new SideBarToggler({
-                sidebar: this.sideBar.domNode,
-                mainContainer: this.mainContainer,
-                map: this.map,
-                centerContainer: this.centerContainer.domNode
-            }, this.sidebarToggle);
-
-            geocoder = new FindAddress({
-                map: this.map,
-                apiKey: AGRC.apiKey
-            }, this.geocodeNode);
-
-            zoomer = new MagicZoom({
-                map: this.map,
-                mapServiceURL: AGRC.urls.vector,
-                searchLayerIndex: 4,
-                searchField: 'NAME',
-                placeHolder: 'place name...',
-                maxResultsToDisplay: 10,
-                'class': 'first'
-            }, this.gnisNode);
-
-            cityZoomer = new MagicZoom({
-                map: this.map,
-                mapServiceURL: AGRC.urls.vector,
-                searchLayerIndex: 1,
-                searchField: 'NAME',
-                placeHolder: 'city name...',
-                maxResultsToDisplay: 10
-            }, this.cityNode);
-
-            wizard = new Wizard({
-                url: AGRC.urls.mainReport,
-                resultName: 'url'
-            }, this.reportNode);
-
-            this.routeMilepost = new GeometryFromRoute({
-                url: AGRC.urls.routeMilepost
-            });
+            this.childWidgets = [
+                toggler = new SideBarToggler({
+                    sidebar: this.sideBar.domNode,
+                    mainContainer: this.mainContainer,
+                    map: this.map,
+                    centerContainer: this.centerContainer.domNode
+                }, this.sidebarToggle),
+                geocoder = new FindAddress({
+                    map: this.map,
+                    apiKey: config.apiKey
+                }, this.geocodeNode),
+                zoomer = new MagicZoom({
+                    map: this.map,
+                    mapServiceURL: config.urls.vector,
+                    searchLayerIndex: 4,
+                    searchField: 'NAME',
+                    placeHolder: 'place name...',
+                    maxResultsToDisplay: 10,
+                    'class': 'first'
+                }, this.gnisNode),
+                cityZoomer = new MagicZoom({
+                    map: this.map,
+                    mapServiceURL: config.urls.vector,
+                    searchLayerIndex: 1,
+                    searchField: 'NAME',
+                    placeHolder: 'city name...',
+                    maxResultsToDisplay: 10
+                }, this.cityNode),
+                wizard = new Wizard({
+                    url: config.urls.mainReport,
+                    resultName: 'url'
+                }, this.reportNode),
+                this.routeMilepost = new GeometryFromRoute({
+                    url: config.urls.routeMilepost
+                })
+            ];
 
             this.setupConnections();
+
+            this.inherited(arguments);
+        },
+        startup: function() {
+            // summary:
+            //      Fires after postCreate when all of the child widgets are finished laying out.
+            console.log('app.app::startup', arguments);
+
+            var that = this;
+            array.forEach(this.childWidgets, function(widget) {
+                that.own(widget);
+                widget.startup();
+            });
 
             this.inherited(arguments);
         },
@@ -231,7 +237,8 @@ define([
             console.info('app.app::initMap', arguments);
 
             this.map = new BaseMap(this.mapDiv, {
-                useDefaultBaseMap: false
+                useDefaultBaseMap: false,
+                showAttribution: false
             });
 
             this.graphicSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,

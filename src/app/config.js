@@ -1,9 +1,7 @@
 define([
-    'dojo/parser',
-
-    'app/App'
+    'dojo/has'
 ], function(
-    parser
+    has
 ) {
     var baseUrl = '/arcgis/rest/services/PEL/Toolbox/GPServer';
     window.AGRC = {
@@ -23,18 +21,17 @@ define([
         //      The version number.
         version: '0.5.0',
 
-        // apiKey: String
+        //  apiKey: String
         //      The api key used for services on api.mapserv.utah.gov
-        // apiKey: 'AGRC-63E1FF17767822', // localhost
-        apiKey: 'AGRC-AC122FA9671436', // test.mapserv.utah.gov
 
         // extentMaxArea: number
-        //      the maximum area of an extent that a report is allowed to be 
+        //      the maximum area of an extent that a report is allowed to be
         extentMaxArea: 1210000000,
 
         urls: {
             baseUrl: baseUrl,
-            vector: 'http://mapserv.utah.gov/arcgis/rest/services/BaseMaps/Vector/MapServer',
+            securedServicesBaseUrl: baseUrl,
+            vector: '//mapserv.utah.gov/arcgis/rest/services/BaseMaps/Vector/MapServer',
             mainReport: baseUrl + '/PEL_Main',
             catexReport: baseUrl + '/PEL_CatEx',
             routeMilepost: baseUrl + '/Milepost_Segment',
@@ -42,6 +39,16 @@ define([
         }
     };
 
-    // lights...camera...action!
-    parser.parse();
+    if (has('agrc-api-key') === 'prod') {
+        // mapserv.utah.gov
+        window.AGRC.apiKey = '';
+    } else if (has('agrc-api-key') === 'stage') {
+        // test.mapserv.utah.gov
+        window.AGRC.apiKey = 'AGRC-AC122FA9671436';
+    } else {
+        // localhost
+        window.AGRC.apiKey = 'AGRC-63E1FF17767822';
+    }
+
+    return window.AGRC;
 });
