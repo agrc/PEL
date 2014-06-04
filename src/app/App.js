@@ -115,10 +115,10 @@ define([
 
             this.childWidgets = [
                 toggler = new SideBarToggler({
-                    sidebar: this.sideBar.domNode,
+                    sidebar: this.sideBar,
                     mainContainer: this.mainContainer,
                     map: this.map,
-                    centerContainer: this.centerContainer.domNode
+                    centerContainer: this.centerContainer
                 }, this.sidebarToggle),
                 geocoder = new FindAddress({
                     map: this.map,
