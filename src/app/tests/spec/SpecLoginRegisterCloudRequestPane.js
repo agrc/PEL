@@ -1,15 +1,15 @@
 require([
     'app/LoginRegisterCloudRequestPane',
 
-    'dojo/_base/window',
+    'dojo/dom-construct',
 
-    'dojo/dom-construct'
+    'dojo/query'
 ], function(
     WidgetUnderTest,
 
-    win,
+    domConstruct,
 
-    domConstruct
+    query
 ) {
     describe('app/LoginRegisterCloudRequestPane', function() {
         var widget;
@@ -19,7 +19,14 @@ require([
         };
 
         beforeEach(function() {
-            widget = new WidgetUnderTest(null, domConstruct.create('div', null, win.body()));
+            widget = new WidgetUnderTest(null, domConstruct.create('div', null, document.body));
+
+            query(
+                'input[type="text"], input[type="password"], input[type="email"]',
+                widget.domNode
+            ).forEach(function(node) {
+                node.value = 'anything';
+            });
         });
 
         afterEach(function() {
