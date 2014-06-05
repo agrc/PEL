@@ -1,3 +1,17 @@
-.login-register-cloud-request-pane {
-
+.login-register-request-pane .task-list-item {
+    list-style-type:none
+}
+.login-register-request-pane .task-list-item label {
+    font-weight: normal
+}
+.login-register-request-pane .task-list-item.enabled label {
+    cursor: pointer
+}
+.login-register-request-pane .task-list-item+.task-list-item {
+    margin-top: 3px
+}
+.login-register-request-pane .task-list-item-checkbox {
+    float: left;
+    margin-left: -20px;
+    margin-top: 4px
 }

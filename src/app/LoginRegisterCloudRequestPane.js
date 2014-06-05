@@ -3,42 +3,66 @@ define([
 
     'dojo/_base/declare',
 
-    'dijit/_WidgetBase',
-    'dijit/_TemplatedMixin'
+    'ijit/widgets/authentication/_LoginRegisterRequestPane'
 ], function(
     template,
 
     declare,
 
-    _WidgetBase,
-    _TemplatedMixin
+    _LoginRegisterRequestPane
 ) {
-    return declare([_WidgetBase, _TemplatedMixin], {
+    return declare([_LoginRegisterRequestPane], {
         // description:
         //      Overloaded Request page to jump through the cloud hosting hoops
 
         templateString: template,
-        baseClass: 'login-register-cloud-request-pane',
 
         // Properties to be sent into constructor
 
-        postCreate: function() {
+        updateUi: function(params) {
             // summary:
-            //      Overrides method of same name in dijit._Widget.
-            // tags:
-            //      private
-            console.log('app.LoginRegisterCloudRequestPane::postCreate', arguments);
+            //      validates a passowrd
+            // params
+            console.log('app.LoginRegisterCloudRequestPane::updateUi', arguments);
 
-            this.setupConnections();
+            var password = params.target.value;
+            var valid = this.validate(password);
 
-            this.inherited(arguments);
+            return valid.result;
         },
-        setupConnections: function() {
-            // summary:
-            //      wire events, and such
-            //
-            console.log('app.LoginRegisterCloudRequestPane::setupConnections', arguments);
 
+        validate: function(password) {
+            // summary:
+            //      validates a password with specific rules
+            // password
+            console.log('app.LoginRegesterCloudRequestPane::validate', arguments);
+
+            var hasNumber = /(?=.*\d)/,
+                hasLower = /(?=.*[a-z])/,
+                hasUpper = /(?=.*[A-Z])/,
+                hasSpecial = /(?=.*[()~!$%^&_\-+=`|{}\[\]:;'<>,.?\/@*#])/;
+
+            var length = password.length >= 8,
+                lowercase = hasLower.test(password),
+                uppercase = hasUpper.test(password),
+                number = hasNumber.test(password),
+                special = hasSpecial.test(password),
+                valid = length && lowercase && uppercase && number && special;
+
+
+            if (valid) {
+                valid = this.inherited(arguments);
+            }
+
+            console.log(valid);
+
+            return {
+                result: valid,
+                length: length,
+                lowercase: lowercase,
+                number: number,
+                special: special
+            };
         }
     });
 });
