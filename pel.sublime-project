@@ -2,6 +2,7 @@
     "folders": [{
         "folder_exclude_patterns": [
             "dist",
+    "src/agrc",
             "src/esri",
             "src/dojo",
             "src/dijit",
