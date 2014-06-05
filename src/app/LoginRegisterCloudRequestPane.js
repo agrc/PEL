@@ -3,11 +3,15 @@ define([
 
     'dojo/_base/declare',
 
+    'dojo/dom-attr',
+
     'ijit/widgets/authentication/_LoginRegisterRequestPane'
 ], function(
     template,
 
     declare,
+
+    domAttr,
 
     _LoginRegisterRequestPane
 ) {
@@ -28,7 +32,17 @@ define([
             var password = params.target.value;
             var valid = this.validate(password);
 
+            this.set('notify', valid);
+
             return valid.result;
+        },
+
+        _setNotifyAttr: function(value) {
+            domAttr.set(this.notifyLength, 'checked', value.length);
+            domAttr.set(this.notifyUppercase, 'checked', value.uppercase);
+            domAttr.set(this.notifyLowercase, 'checked', value.lowercase);
+            domAttr.set(this.notifyNumber, 'checked', value.number);
+            domAttr.set(this.notifySpecial, 'checked', value.special);
         },
 
         validate: function(password) {
@@ -60,6 +74,7 @@ define([
                 result: valid,
                 length: length,
                 lowercase: lowercase,
+                uppercase: uppercase,
                 number: number,
                 special: special
             };
