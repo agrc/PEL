@@ -1,21 +1,23 @@
 {
     "folders": [{
         "folder_exclude_patterns": [
+            ".grunt",
             "dist",
-    "src/agrc",
-            "src/esri",
-            "src/dojo",
+            "node_modules",
+            "src/agrc",
+            "src/bootstrap",
             "src/dijit",
+            "src/dojo",
             "src/dojox",
-            "src/util",
+            "src/esri",
             "src/favico.js",
+            "src/ijit",
+            "src/jasmine-favicon-reporter",
+            "src/jquery",
             "src/matchers",
             "src/spinjs",
             "src/stubmodule",
-            "src/jasmine-favicon-reporter",
-            "src/jquery",
-            "node_modules",
-            ".grunt"
+            "src/util"
         ],
         "file_exclude_patterns": [
             "dist/index.html",
