@@ -1,5 +1,9 @@
 .login-register-request-pane .task-list-item {
-    list-style-type:none
+    list-style-type:none;
+    margin-left: -30px;
+}
+.login-register-request-pane .indented {
+    margin-left: -15px;
 }
 .login-register-request-pane .task-list-item label {
     font-weight: normal
@@ -12,6 +16,6 @@
 }
 .login-register-request-pane .task-list-item-checkbox {
     float: left;
-    margin-left: -20px;
+    margin-right: 5px;
     margin-top: 4px
 }

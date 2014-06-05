@@ -29,6 +29,7 @@ define([
     './config',
     './ReportGeneratorWizard',
     './GeometryFromRoute',
+    './LoginRegisterCloudRequestPane',
 
 
     //no mapping
@@ -64,7 +65,8 @@ define([
 
     config,
     Wizard,
-    GeometryFromRoute
+    GeometryFromRoute,
+    CloudRequestPane
 ) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         // summary:
@@ -104,6 +106,16 @@ define([
                 logoutDiv: this.logoutDiv,
                 securedServicesBaseUrl: config.urls.baseUrl
             });
+
+            var cloudRequest = null;
+            cloudRequest = new CloudRequestPane({
+                url: this.login.urls.base + this.login.urls.request,
+                parentWidget: this.login
+            }, this.login.requestPaneDiv);
+
+            this.login.stackContainer.removeChild(this.login.requestPane);
+            this.login.requestPane = cloudRequest;
+            this.login.stackContainer.addChild(this.login.requestPane);
 
             var toggler,
                 geocoder,
