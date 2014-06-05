@@ -4,6 +4,7 @@
 @import '../../agrc/resources/map/BaseMapSelector.css';
 @import '../../app/resources/GeometryFromRoute.css';
 @import '../../app/resources/ReportGeneratorWizard.css';
+@import '../../app/resources/LoginRegisterCloudRequestPane.css';
 @import '../../dijit/themes/claro/claro.css';
 @import '../../esri/css/esri.css';
 @import '../../ijit/resources/authentication/LoginRegister.css';
@@ -81,7 +82,7 @@ body, html, .app {
 .app .center-container {
     position: absolute;
     top: 75px;
-    left: 310px;
+    left: 360px;
     bottom: 5px;
     right: 5px;
     overflow: hidden;

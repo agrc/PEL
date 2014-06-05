@@ -39,24 +39,24 @@
                 <div class='form-group last'>
                     <label>Password Rules</label>
                     <ol class="task-list">
-                        <li class="task-list-item enabled">
+                        <li class="task-list-item">
                             <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyLength" />Passwords must be at least 8 characters in length</li>
-                        <li class="task-list-item enabled">
+                        <li class="task-list-item">
                             Passwords must contain at least one character from three of the four following categories:</li>
-                        <li class="task-list-item enabled">
+                        <li class="task-list-item indented">
                             <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyUppercase" />Uppercase characters (A to Z)</li>
-                        <li class="task-list-item enabled">
+                        <li class="task-list-item indented">
                             <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyLowercase" />Lowercase characters (a to z)</li>
-                        <li class="task-list-item enabled">
+                        <li class="task-list-item indented">
                             <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyNumber" />Numbers (0 through 9)</li>
-                        <li class="task-list-item enabled">
+                        <li class="task-list-item indented">
                             <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifySpecial" />Special characters: ~!@#$%^&amp;*_-+=`|(){}[]:;'&lt;&gt;,.?/</li>
-                        <li class="task-list-item enabled">
-                            Passwords must be changed after 90 days.</li>
-                        <li class="task-list-item enabled">
-                            New passwords must be unique from previous passwords. Old passwords must not be re-used.</li>
-                        <li class="task-list-item enabled">
-                            When changing a password, it is not acceptable to simply add a number to the end of a previously used password.</li>
+                        <li class="task-list-item">
+                            <input type="checkbox" class="task-list-item-checkbox" checked="true" disabled="true"/>Passwords must be changed after 90 days.</li>
+                        <li class="task-list-item">
+                            <input type="checkbox" class="task-list-item-checkbox" checked="true" disabled="true"/>New passwords must be unique from previous passwords. Old passwords must not be re-used.</li>
+                        <li class="task-list-item">
+                            <input type="checkbox" class="task-list-item-checkbox" checked="true" disabled="true"/>When changing a password, it is not acceptable to simply add a number to the end of a previously used password.</li>
                     </ol>
                 </div>
                 <div data-dojo-attach-point='errorDiv' class="alert alert-danger">
