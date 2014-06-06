@@ -1,3 +1,21 @@
-.login-register-cloud-logout {
-
+.login-register .task-list-item {
+    list-style-type:none;
+    margin-left: -30px;
+}
+.login-register .indented {
+    margin-left: -15px;
+}
+.login-register .task-list-item label {
+    font-weight: normal
+}
+.login-register .task-list-item.enabled label {
+    cursor: pointer
+}
+.login-register .task-list-item+.task-list-item {
+    margin-top: 3px
+}
+.login-register .task-list-item-checkbox {
+    float: left;
+    margin-right: 5px;
+    margin-top: 4px
 }

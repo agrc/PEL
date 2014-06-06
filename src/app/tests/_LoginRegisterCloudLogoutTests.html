@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../dijit/themes/claro/claro.css" />
     <link rel="stylesheet" type="text/css" href="../../esri/css/esri.css" />
     <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../ijit/resources/authentication/LoginRegister.css">
     <link rel="stylesheet" href="../resources/_LoginRegisterCloudLogout.css">
     <style type='text/css'>
         body {
@@ -27,13 +28,19 @@
 
         require({
             baseUrl: baseUrl,
-            packages: ['app', 'esri', 'dojo', 'dijit', 'dojox']
+            packages: ['app', 'ijit', 'esri', 'dojo', 'dijit', 'dojox']
         }, [
             'app/_LoginRegisterCloudLogout',
 
             'dojo/domReady!'
         ], function(Module) {
             widgetUnderTest = new Module({
+                firstName: 'loginResult.user.first',
+                lastName: 'loginResult.user.last',
+                role: 'loginResult.user.role',
+                email: 'loginResult.user.email',
+                url: 'this.urls.base + this.urls.change',
+                parentWidget: {}
             }, 'node');
 
             widgetUnderTest.startup();
@@ -41,6 +48,8 @@
 </script>
 </head>
 <body class='claro'>
-    <div id="node"></div>
+    <div class="login-register-logout">
+        <div id="node"></div>
+    </div>
 </body>
 </html>

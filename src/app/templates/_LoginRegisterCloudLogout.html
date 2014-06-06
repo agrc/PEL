@@ -1,3 +1,77 @@
 <div>
-   
+    <div class="dropdown">
+        Welcome,
+        <a data-toggle='dropdown' role='button' href="#">${firstName} ${lastName}
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role='menu'>
+            <li><a href="#" data-dojo-attach-event='onclick: onSignOutClick'>Sign out</a>
+            </li>
+            <li class='admin-link' data-dojo-attach-point='adminLink'><a href="user_admin.html">User Admin Page</a>
+            </li>
+            <li><a href="#" data-dojo-attach-event='onclick: onChangePasswordClick'>Change Password</a>
+            </li>
+        </ul>
+    </div>
+    <div class="modal fade login-register" data-dojo-attach-point="modalDiv">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class='modal-title'>Change Password</h4>
+                </div>
+                <div class="modal-body">
+                    <form data-dojo-attach-point='form'>
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input data-dojo-attach-point='currentPassTxt' data-dojo-attach-event='input: updateUi' type='password' class='form-control' tabindex="1">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input data-dojo-attach-point='newPassTxt' data-dojo-attach-event='input: updateUi' type='password' class='form-control' tabindex='2'>
+                        </div>
+                        <div class="form-group last">
+                            <label>Confirm New Password</label>
+                            <input data-dojo-attach-point='newPassConfirmTxt' data-dojo-attach-event='input: updateUi' type='password' class='form-control' tabindex='3'>
+                        </div>
+                        <div class='form-group last'>
+                            <label>Password Rules</label>
+                            <ol class="task-list">
+                                <li class="task-list-item">
+                                    <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyLength" />Passwords must be at least 8 characters in length</li>
+                                <li class="task-list-item">
+                                    Passwords must contain at least one character from three of the four following categories:</li>
+                                <li class="task-list-item indented">
+                                    <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyUppercase" />Uppercase characters (A to Z)</li>
+                                <li class="task-list-item indented">
+                                    <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyLowercase" />Lowercase characters (a to z)</li>
+                                <li class="task-list-item indented">
+                                    <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifyNumber" />Numbers (0 through 9)</li>
+                                <li class="task-list-item indented">
+                                    <input type="checkbox" class="task-list-item-checkbox" disabled="true" data-dojo-attach-point="notifySpecial" />Special characters: ~!@#$%^&amp;*_-+=`|(){}[]:;'&lt;&gt;,.?/</li>
+                                <li class="task-list-item">
+                                    <input type="checkbox" class="task-list-item-checkbox" checked="true" disabled="true" />Passwords must be changed after 90 days.</li>
+                                <li class="task-list-item">
+                                    <input type="checkbox" class="task-list-item-checkbox" checked="true" disabled="true" />New passwords must be unique from previous passwords. Old passwords must not be re-used.</li>
+                                <li class="task-list-item">
+                                    <input type="checkbox" class="task-list-item-checkbox" checked="true" disabled="true" />When changing a password, it is not acceptable to simply add a number to the end of a previously used password.</li>
+                            </ol>
+                        </div>
+                        <div data-dojo-attach-point='errorDiv' class="alert alert-danger">
+                            test message
+                        </div>
+                    </form>
+                    <div class="alert alert-success" data-dojo-attach-point="successDiv">
+                        Your password has been successfully changed!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button data-dojo-attach-point='submitBtn' data-dojo-attach-event='onclick: onSubmitClick' type="button" data-style='expand-left' data-spinner-size='32' class="btn btn-primary ladda-button" disabled tabindex="4">
+                        <span class='ladda-label'>Submit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
