@@ -102,6 +102,7 @@ module.exports = function(grunt) {
             },
             options: {
                 dojo: 'src/dojo/dojo.js', // Path to dojo.js file in dojo source
+                load: 'build', // Optional: Utility to bootstrap (Default: 'build')
                 releaseDir: '../dist',
                 require: 'src/app/run.js', // Optional: Module to require for the build (Default: nothing)
                 basePath: './src'
