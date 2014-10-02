@@ -17,7 +17,7 @@ define([
         //      See the LoginRegister widget
         appName: 'pel',
 
-        // version: String
+        // version.: String
         //      The version number.
         version: '0.5.0',
 

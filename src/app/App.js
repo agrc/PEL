@@ -1,5 +1,5 @@
 define([
-    'dojo/text!./templates/App.html',
+    'dojo/text!app/templates/App.html',
 
     'dojo/_base/declare',
     'dojo/_base/lang',
@@ -26,10 +26,11 @@ define([
     'ijit/widgets/layout/SideBarToggler',
     'ijit/widgets/authentication/LoginRegister',
 
-    './config',
-    './ReportGeneratorWizard',
-    './GeometryFromRoute',
-    './LoginRegisterCloudRequestPane',
+    'app/config',
+    'app/ReportGeneratorWizard',
+    'app/GeometryFromRoute',
+    'app/LoginRegisterCloudRequestPane',
+    'app/LoginRegisterCloudLogout',
 
 
     //no mapping
