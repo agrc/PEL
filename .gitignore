@@ -4,6 +4,7 @@
 .DS_Store
 .grunt/
 dist/
+deploy/
 _SpecRunner.html
 node_modules/
 src/agrc/

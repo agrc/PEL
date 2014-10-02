@@ -30,7 +30,7 @@ define([
     'app/ReportGeneratorWizard',
     'app/GeometryFromRoute',
     'app/LoginRegisterCloudRequestPane',
-    'app/LoginRegisterCloudLogout',
+    'app/_LoginRegisterCloudLogout',
 
 
     //no mapping
