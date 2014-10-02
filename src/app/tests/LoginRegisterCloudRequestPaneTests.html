@@ -7,9 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../../dijit/themes/claro/claro.css" />
-    <link rel="stylesheet" type="text/css" href="../../esri/css/esri.css" />
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../resources/UserAdmin.css">
     <link rel="stylesheet" href="../../ijit/resources/authentication/LoginRegister.css">
     <link rel="stylesheet" href="../resources/LoginRegisterCloudRequestPane.css">
     <style type='text/css'>
@@ -28,7 +26,15 @@
 
         require({
             baseUrl: baseUrl,
-            packages: ['app', 'ijit', 'esri', 'dojo', 'dijit', 'dojox']
+            packages: ['app', 'ijit', 'esri', 'dojo', 'dijit', 'dojox',{
+                name: 'ladda',
+                location: './ladda-bootstrap',
+                main: 'dist/ladda'
+            },{
+                name: 'spin',
+                location: './spinjs',
+                main: 'spin'
+            }]
         }, [
             'app/LoginRegisterCloudRequestPane',
 

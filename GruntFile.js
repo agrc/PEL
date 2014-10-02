@@ -5,8 +5,7 @@ module.exports = function(grunt) {
         otherFiles = [
             'src/app/**/*.html',
             'src/app/**/*.css',
-            'src/index.html',
-            'src/ChangeLog.html'
+            'src/**.html'
         ],
         jsHintFiles = [jsFiles, gruntFile],
         bumpFiles = [
@@ -85,8 +84,10 @@ module.exports = function(grunt) {
         },
         copy: {
             main: {
-                src: 'src/ChangeLog.html',
-                dest: 'dist/ChangeLog.html'
+                expand: true,
+                cwd: 'src/',
+                src: ['ChangeLog.html', 'user_admin.html'],
+                dest: 'dist/'
             }
         },
         dojo: {
@@ -119,9 +120,7 @@ module.exports = function(grunt) {
                 dest: 'src/esri'
             },
             travis: {
-                options: {
-                    beautify: false
-                }
+                dest: 'src/esri'
             }
         },
         imagemin: {
@@ -215,7 +214,7 @@ module.exports = function(grunt) {
         watch: {
             jshint: {
                 files: jsHintFiles,
-                tasks: ['jshint', 'jasmine:main:build']
+                tasks: ['jshint', 'jasmine:main:build', 'amdcheck:main']
             },
             src: {
                 files: jsHintFiles.concat(otherFiles),

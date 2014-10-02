@@ -7,6 +7,7 @@
             "node_modules",
             "src/agrc",
             "src/bootstrap",
+            "src/dgrid",
             "src/dijit",
             "src/dojo",
             "src/dojox",
@@ -15,10 +16,15 @@
             "src/ijit",
             "src/jasmine-favicon-reporter",
             "src/jquery",
+            "src/ladda-bootstrap",
             "src/matchers",
+            "src/mustache",
+            "src/put-selector",
+            "src/spin.js",
             "src/spinjs",
             "src/stubmodule",
-            "src/util"
+            "src/util",
+            "src/xstyle"
         ],
         "file_exclude_patterns": [
             "dist/index.html",

@@ -2,11 +2,6 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
 
-    'dojo/dom-attr',
-    'dojo/dom-class',
-
-    'dojo/topic',
-
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
@@ -15,11 +10,6 @@ define([
 ], function(
     declare,
     lang,
-
-    domAttr,
-    domClass,
-
-    topic,
 
     _WidgetBase,
     _TemplatedMixin,

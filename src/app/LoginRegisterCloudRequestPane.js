@@ -1,18 +1,14 @@
 define([
-    'dojo/text!./templates/LoginRegisterCloudRequestPane.html',
+    'dojo/text!app/templates/LoginRegisterCloudRequestPane.html',
 
     'dojo/_base/declare',
 
-    'dojo/dom-attr',
-
     'ijit/widgets/authentication/_LoginRegisterRequestPane',
-    './_CloudPasswordMixin'
+    'app/_CloudPasswordMixin'
 ], function(
     template,
 
     declare,
-
-    domAttr,
 
     _LoginRegisterRequestPane,
     _CloudPasswordMixin

@@ -117,9 +117,9 @@ require([
                     testWidget.panes[1].reportParams.set('geometry', polyline);
                     testWidget.panes[2].reportParams.set('name', 'my report');
 
-                    spyOn(testWidget.panes[0], 'validate').andCallThrough();
-                    spyOn(testWidget.panes[1], 'validate').andCallThrough();
-                    spyOn(testWidget.panes[2], 'validate').andCallThrough();
+                    spyOn(testWidget.panes[0], 'validate').and.callThrough();
+                    spyOn(testWidget.panes[1], 'validate').and.callThrough();
+                    spyOn(testWidget.panes[2], 'validate').and.callThrough();
 
                     expect(testWidget.isValid()).toEqual(true);
                     expect(testWidget.panes[0].validate).toHaveBeenCalled();

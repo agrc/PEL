@@ -5,7 +5,6 @@ define([
     'dojo/_base/lang',
 
     'dojo/dom-class',
-    'dojo/dom-attr',
 
     'dojo/on',
     'dojo/Stateful',
@@ -13,8 +12,6 @@ define([
     'dojo/json',
 
     'esri/request',
-
-    'agrc/modules/String',
 
     'app/_ReportWizardPaneBaseMixin'
 ], function(
@@ -24,7 +21,6 @@ define([
     lang,
 
     domClass,
-    domAttr,
 
     on,
     Stateful,
@@ -32,8 +28,6 @@ define([
     json,
 
     esriRequest,
-
-    strings,
 
     _WizardPaneBase
 ) {

@@ -1,10 +1,9 @@
 define([
-    'dojo/text!./templates/GeometryFromRouteTemplate.html',
+    'dojo/text!app/templates/GeometryFromRouteTemplate.html',
 
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/window',
-    'dojo/_base/Color',
 
     'dojo/dom-construct',
     'dojo/dom-class',
@@ -16,10 +15,8 @@ define([
     'dijit/_TemplatedMixin',
 
     'esri/tasks/Geoprocessor',
-    'esri/graphic',
-    'esri/symbols/SimpleLineSymbol',
 
-    './data/routes',
+    'app/data/routes',
 
     'jquery/jquery'
 ], function(
@@ -28,7 +25,6 @@ define([
     declare,
     lang,
     win,
-    Color,
 
     domConstruct,
     domClass,
@@ -40,8 +36,6 @@ define([
     _TemplatedMixin,
 
     Geoprocessor,
-    Graphic,
-    SimpleLineSymbol,
 
     routes
 ) {

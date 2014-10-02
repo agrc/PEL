@@ -8,7 +8,6 @@ define([
     'dojo/dom-class',
 
     'dojo/Stateful',
-    'dojo/aspect',
 
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -23,7 +22,6 @@ define([
     domClass,
 
     Stateful,
-    aspect,
 
     _WidgetBase,
     _TemplatedMixin,
@@ -78,7 +76,7 @@ define([
         },
         postCreate: function() {
             // summary:
-            //       This is fired after all properties of a widget are defined, 
+            //       This is fired after all properties of a widget are defined,
             //       and the document fragment representing the widget is created—but
             //       before the fragment itself is added to the main document.
             console.log('app._ReportWizardControlPanel::postCreate', arguments);

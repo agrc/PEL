@@ -1,4 +1,4 @@
-(function() {
+(function () {
     // the baseUrl is relavant in source version and while running unit tests.
     // the`typeof` is for when this file is passed as a require argument to the build system
     // since it runs on node, it doesn't have a window object. The basePath for the build system
@@ -8,7 +8,7 @@
             typeof window !== 'undefined' &&
             window.dojoConfig &&
             window.dojoConfig.isJasmineTestRunner
-        ) ? '/src' : './',
+            ) ? '/src': './',
         packages: [
             'agrc',
             'app',
@@ -16,18 +16,31 @@
             'dojo',
             'dojox',
             'esri',
-            'ijit', {
+            'ijit',
+            {
                 name: 'jquery',
-                location: 'jquery/dist',
+                location: './jquery/dist',
                 main: 'jquery'
-            }, {
+            },{
                 name: 'bootstrap',
-                location: 'bootstrap',
+                location: './bootstrap',
                 main: 'dist/js/bootstrap'
-            }, {
+            },{
                 name: 'spin',
-                location: 'spinjs',
+                location: './spinjs',
                 main: 'spin'
+            },
+            'dgrid',
+            'put-selector',
+            'xstyle',
+            {
+                name: 'lodash',
+                location: './lodash',
+                main: 'dist/lodash'
+            },{
+                name: 'ladda',
+                location: './ladda-bootstrap',
+                main: 'dist/ladda'
             }
         ]
     };

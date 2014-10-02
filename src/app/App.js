@@ -7,8 +7,6 @@ define([
     'dojo/_base/array',
 
     'dojo/topic',
-    'dojo/aspect',
-    'dojo/dom-construct',
 
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -30,7 +28,6 @@ define([
     'app/ReportGeneratorWizard',
     'app/GeometryFromRoute',
     'app/LoginRegisterCloudRequestPane',
-    'app/_LoginRegisterCloudLogout',
 
 
     //no mapping
@@ -45,8 +42,6 @@ define([
     array,
 
     topic,
-    aspect,
-    domConstruct,
 
     _WidgetBase,
     _TemplatedMixin,

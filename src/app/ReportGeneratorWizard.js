@@ -1,5 +1,5 @@
 define([
-    'dojo/text!./templates/ReportGeneratorWizard.html',
+    'dojo/text!app/templates/ReportGeneratorWizard.html',
 
     'dojo/_base/declare',
     'dojo/_base/lang',

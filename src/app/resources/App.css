@@ -7,6 +7,7 @@
 @import '../../app/resources/LoginRegisterCloudRequestPane.css';
 @import '../../dijit/themes/claro/claro.css';
 @import '../../esri/css/esri.css';
+@import '../../bootstrap/dist/css/bootstrap.css';
 @import '../../ijit/resources/authentication/LoginRegister.css';
 @import '../../ijit/themes/standard/layout/PaneStack.css';
 @import '../../ijit/themes/standard/layout/SideBarToggler.css';
