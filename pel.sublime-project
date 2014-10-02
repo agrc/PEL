@@ -2,6 +2,7 @@
     "folders": [{
         "folder_exclude_patterns": [
             ".grunt",
+            "deploy",
             "dist",
             "node_modules",
             "src/agrc",

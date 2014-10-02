@@ -21,3 +21,4 @@ src/spinjs/
 src/stubmodule/
 src/util/
 npm-debug.log
+secrets.json

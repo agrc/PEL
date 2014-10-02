@@ -1,10 +1,10 @@
 define([
-    'dojo/text!./templates/_LoginRegisterCloudLogout.html',
+    'dojo/text!app/templates/_LoginRegisterCloudLogout.html',
 
     'dojo/_base/declare',
 
     'ijit/widgets/authentication/_LoginRegisterLogout',
-    './_CloudPasswordMixin'
+    'app/_CloudPasswordMixin'
 ], function(
     template,
 
