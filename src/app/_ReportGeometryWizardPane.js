@@ -54,8 +54,8 @@ define([
                 buffer: 1,
                 _bufferSetter: function(value) {
                     var buffer = +value;
-                    if(buffer > 1){
-                        buffer = buffer/2;
+                    if (buffer > 1) {
+                        buffer = buffer / 2;
                     }
 
                     this.buffer = buffer;
@@ -167,7 +167,9 @@ define([
             var buffer = this.reportParams.buffer,
                 geometry = this.reportParams.geometry;
 
-            if (!this.numbersOnly.test(buffer) || (geometry.type !== 'polygon' && buffer < 1) || buffer < 0) {
+            if (!this.numbersOnly.test(buffer) ||
+               (geometry && geometry.type !== 'polygon' && buffer < 1) ||
+               buffer < 0) {
                 domClass.replace(this.bufferGroup, 'has-error', 'has-success');
             } else {
                 domClass.replace(this.bufferGroup, 'has-success', 'has-error');
