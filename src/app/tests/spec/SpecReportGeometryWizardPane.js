@@ -172,6 +172,22 @@ require([
                 var node = domConstruct.create('input');
                 domAttr.set(node, 'data-prop', 'buffer');
                 domAttr.set(node, 'type', 'text');
+                domAttr.set(node, 'value', '1');
+
+                var evt = {
+                    target: node
+                };
+
+                testWidget.update(evt);
+
+                expect(testWidget.reportParams.buffer).toEqual(1);
+            });
+
+            ///https://github.com/agrc/PEL/issues/50
+            it('divides the buffer in half if it is greater than 1', function() {
+                var node = domConstruct.create('input');
+                domAttr.set(node, 'data-prop', 'buffer');
+                domAttr.set(node, 'type', 'text');
                 domAttr.set(node, 'value', '5');
 
                 var evt = {
@@ -180,7 +196,7 @@ require([
 
                 testWidget.update(evt);
 
-                expect(testWidget.reportParams.buffer).toEqual(5);
+                expect(testWidget.reportParams.buffer).toEqual(2.5);
             });
 
             it('sets the geometry after a user draws a shape', function() {

@@ -53,7 +53,12 @@ define([
                 geometry: null,
                 buffer: 1,
                 _bufferSetter: function(value) {
-                    this.buffer = +value;
+                    var buffer = +value;
+                    if(buffer > 1){
+                        buffer = buffer/2;
+                    }
+
+                    this.buffer = buffer;
                 },
                 shapefile: false,
                 zip: null
