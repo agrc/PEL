@@ -86,7 +86,7 @@ module.exports = function(grunt) {
             main: {
                 expand: true,
                 cwd: 'src/',
-                src: ['ChangeLog.html', 'user_admin.html', 'PEL_Tool_Instructions.pdf'],
+                src: ['ChangeLog.html', 'user_admin.html', 'user-guide.pdf'],
                 dest: 'dist/'
             }
         },
