@@ -167,10 +167,10 @@ define([
             var buffer = this.reportParams.buffer,
                 geometry = this.reportParams.geometry;
 
-            if (this.numbersOnly.test(buffer) && buffer > 0) {
-                domClass.replace(this.bufferGroup, 'has-success', 'has-error');
-            } else {
+            if (!this.numbersOnly.test(buffer) || (geometry.type !== 'polygon' && buffer < 1) || buffer < 0) {
                 domClass.replace(this.bufferGroup, 'has-error', 'has-success');
+            } else {
+                domClass.replace(this.bufferGroup, 'has-success', 'has-error');
             }
 
             //update ui
@@ -179,7 +179,8 @@ define([
                 'glyphicon-ok-sign green';
             domClass.replace(this.geometryStatus, 'glyphicon ' + css);
 
-            if (!geometry || buffer < 1) {
+            // point | multipoint | polyline | polygon | extent
+            if (!geometry || (geometry.type !== 'polygon' && buffer < 1) || buffer < 0) {
                 return false;
             }
 

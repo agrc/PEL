@@ -8,7 +8,8 @@ require([
 
     'dojo/topic',
 
-    'esri/geometry/Polyline'
+    'esri/geometry/Polyline',
+    'esri/geometry/Polygon'
 
 ], function(
     WidgetUnderTest,
@@ -20,12 +21,12 @@ require([
 
     topic,
 
-    Geometry
+    Polyline,
+    Polygon
 ) {
     describe('app/_ReportGeometryWizardPane', function() {
         var testWidget,
-            goodPolyline = new Geometry({
-                'type': 'polyline',
+            goodPolyline = new Polyline({
                 'paths': [
                     [
                         [242994.6799999997, 4514126.4399999995],
@@ -100,22 +101,22 @@ require([
                         [250811.23000000045, 4514150.75]
                     ]
                 ],
-                '_path': 0,
                 'spatialReference': {
-                    'wkid': 26912,
-                    'latestWkid': 26912
-                },
-                '_extent': {
-                    'xmin': 242994.6799999997,
-                    'ymin': 4514126.4399999995,
-                    'xmax': 250811.23000000045,
-                    'ymax': 4515030.01,
-                    'spatialReference': {
-                        'wkid': 26912,
-                        'latestWkid': 26912
-                    }
-                },
-                '_partwise': null
+                    'wkid': 26912
+                }
+            }),
+            goodPolygon = new Polygon({
+                'rings': [
+                    [
+                        [425865.70191816124, 4532651.193985633],
+                        [425886.00550379325, 4532672.990481973],
+                        [425887.7969966431, 4532648.8053284995],
+                        [425865.70191816124, 4532651.193985633]
+                    ]
+                ],
+                'spatialReference': {
+                    wkid: 26912
+                }
             });
 
         beforeEach(function() {
@@ -148,15 +149,27 @@ require([
 
                     expect(testWidget.valid()).toEqual(true);
                 });
-
-                it('should be invalid if buffer is less than 1', function() {
+                it('should be invalid if polyline buffer is less than 1', function() {
                     testWidget.reportParams.shapefile = false;
                     testWidget.reportParams.buffer = 0;
                     testWidget.reportParams.geometry = goodPolyline;
 
                     expect(testWidget.valid()).toEqual(false);
                 });
+                it('should be valid if polygpon buffer is 0', function() {
+                    testWidget.reportParams.shapefile = false;
+                    testWidget.reportParams.buffer = 0;
+                    testWidget.reportParams.geometry = goodPolygon;
 
+                    expect(testWidget.valid()).toEqual(true);
+                });
+                it('should be invalid if polygpon buffer is less than 0', function() {
+                    testWidget.reportParams.shapefile = false;
+                    testWidget.reportParams.buffer = -1;
+                    testWidget.reportParams.geometry = goodPolygon;
+
+                    expect(testWidget.valid()).toEqual(false);
+                });
                 it('should be invalid if area is larger than max allowed', function() {
                     testWidget.reportParams.shapefile = false;
                     testWidget.reportParams.buffer = 1210000000;
