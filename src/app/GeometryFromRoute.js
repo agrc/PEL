@@ -58,8 +58,8 @@ define([
             console.log('app.GeometryFromRoute::postCreate', arguments);
 
             var that = this;
-
-            for (var i = routes.length - 1; i >= 0; i--) {
+            var length = routes.length - 1;
+            for (var i = 0; i <= length; i++) {
                 var option = domConstruct.toDom(lang.replace('<option value="{0}">{0}</option>', [routes[i]]));
                 domConstruct.place(option, this.routeNode);
             }

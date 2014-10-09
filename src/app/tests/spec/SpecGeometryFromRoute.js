@@ -30,8 +30,16 @@ require([
                 expect(testWidget).toEqual(jasmine.any(WidgetUnderTest));
             });
 
-            it('builds the route select', function() {
-                expect(testWidget.routeNode.childElementCount).toEqual(251);
+            describe('route list', function() {
+                it('builds the list ascending', function() {
+                    // fist node is select a route option
+                    expect(testWidget.routeNode.children[1].value).toEqual('0006P');
+                    expect(testWidget.routeNode.children[250].value).toEqual('089AP');
+                });
+                it('builds the route select', function() {
+                    // 250 routes plus 1 for the choose directions
+                    expect(testWidget.routeNode.childElementCount).toEqual(251);
+                });
             });
 
             describe('requests', function() {
