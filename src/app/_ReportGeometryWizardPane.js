@@ -148,7 +148,8 @@ define([
 
             var file = this.reportParams.get('zip'),
                 state = true,
-                css = null;
+                css = null,
+                buffer = this.reportParams.buffer;
 
             if (!file) {
                 state = false;
@@ -156,6 +157,13 @@ define([
 
             css = state ? 'glyphicon-ok-sign green' : 'glyphicon-exclamation-sign red';
             domClass.replace(this.fileStatus, 'glyphicon ' + css);
+
+            if (!this.numbersOnly.test(buffer) || buffer < 0) {
+                domClass.replace(this.bufferGroup, 'has-error', 'has-success');
+                state = state && false;
+            } else {
+                domClass.replace(this.bufferGroup, 'has-success', 'has-error');
+            }
 
             return state;
         },

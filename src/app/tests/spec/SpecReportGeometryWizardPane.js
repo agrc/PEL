@@ -139,6 +139,20 @@ require([
                 it('should be invalid if file upload is empty', function() {
                     expect(testWidget.valid()).toEqual(false);
                 });
+                it('should be invalid if buffer is negative', function() {
+                    testWidget.reportParams.shapefile = true;
+                    testWidget.reportParams.zip = 'some.zip';
+                    testWidget.reportParams.buffer = -1;
+
+                    expect(testWidget.valid()).toEqual(false);
+                });
+                it('should be valid if buffer is non negative', function() {
+                    testWidget.reportParams.shapefile = true;
+                    testWidget.reportParams.zip = 'some.zip';
+                    testWidget.reportParams.buffer = 0;
+
+                    expect(testWidget.valid()).toEqual(true);
+                });
             });
 
             describe('user drawn geometry', function() {
