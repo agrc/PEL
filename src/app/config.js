@@ -19,7 +19,7 @@ define([
 
         // version.: String
         //      The version number.
-        version: '0.6.4',
+        version: '0.6.4-23c5ae3',
 
         //  apiKey: String
         //      The api key used for services on api.mapserv.utah.gov
@@ -32,10 +32,18 @@ define([
             baseUrl: baseUrl,
             securedServicesBaseUrl: baseUrl,
             vector: '//mapserv.utah.gov/arcgis/rest/services/BaseMaps/Vector/MapServer',
-            mainReport: baseUrl + '/PEL_Main',
-            catexReport: baseUrl + '/PEL_CatEx',
+            report: baseUrl + 'WebReport',
             routeMilepost: baseUrl + '/Milepost_Segment',
-            uploadUrl: baseUrl + '/uploads/upload'
+            uploadUrl: baseUrl + '/uploads/upload',
+            udotFeatureService: '//maps.udot.utah.gov/arcgis/rest/services/EPM_Projects/FeatureServer'
+        },
+
+        topics:{
+            updateTitle: 'app/update-title',
+            publishGraphic: 'app/publish-graphic',
+            resetWizard: 'app/wizard-reset',
+            enableTool: 'app/enable-tool',
+            notifyWizardOfGeometry: 'app/report-wizard-geometry'
         }
     };
 

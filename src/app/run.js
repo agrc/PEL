@@ -67,6 +67,7 @@
             // force api to use CORS on mapserv thus removing the test request on app load
             // e.g. http://mapserv.utah.gov/ArcGIS/rest/info?f=json
             esriConfig.defaults.io.corsEnabledServers.push('mapserv.utah.gov');
+            esriConfig.defaults.io.corsEnabledServers.push('maps.udot.utah.gov');
 
             // don't initialize if this is the jasmine test runner
             if (!window.dojoConfig || !window.dojoConfig.isJasmineTestRunner) {

@@ -3,8 +3,12 @@ define([
 
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/_base/array',
+
+    'dojo/promise/all',
 
     'dojo/dom-class',
+    'dojo/dom-attr',
 
     'dojo/on',
     'dojo/Stateful',
@@ -13,14 +17,20 @@ define([
 
     'esri/request',
 
-    'app/_ReportWizardPaneBaseMixin'
+    'app/_ReportWizardPaneBaseMixin',
+
+    'app/config'
 ], function(
     template,
 
     declare,
     lang,
+    array,
+
+    all,
 
     domClass,
+    domAttr,
 
     on,
     Stateful,
@@ -29,7 +39,9 @@ define([
 
     esriRequest,
 
-    _WizardPaneBase
+    _WizardPaneBase,
+
+    config
 ) {
     // summary:
     //      A mixin for shared code between the panes in LoginRegistration
@@ -42,6 +54,11 @@ define([
 
         // activeTool: domNode
         activeTool: null,
+
+        // toolChoiceValue: string
+        // summary:
+        //      shapefile, pin, route-mile-post, polygon, line
+        toolChoiceValue: null,
 
         constructor: function() {
             // summary:
@@ -79,11 +96,10 @@ define([
             //      connects, subscribes, watches
             console.log('app._ReportGeometryWizardPane::setupConnections', arguments);
 
-            this.subscribe('app/report-wizard-geometry', lang.hitch(this, 'setGeometry'));
+            this.subscribe(config.topics.notifyWizardOfGeometry, lang.hitch(this, 'setGeometry'));
 
             this.own(
-                on(this.bufferInput, 'change', lang.hitch(this, 'update')),
-                on(this.bufferInput, 'keyup', lang.hitch(this, 'update'))
+                on(this.bufferInput, 'change, keyup, input', lang.hitch(this, 'update'))
             );
 
             this.reportParams.watch('geometry', lang.hitch(this, 'isValid'));
@@ -99,6 +115,7 @@ define([
 
             domClass.add(this.shapefileGroup, 'hidden');
             domClass.add(this.drawingGroup, 'hidden');
+            domClass.add(this.pinGroup, 'hidden');
         },
         update: function(evt) {
             // summary:
@@ -176,32 +193,43 @@ define([
                 geometry = this.reportParams.geometry;
 
             if (!this.numbersOnly.test(buffer) ||
-               (geometry && geometry.type !== 'polygon' && buffer < 1) ||
-               buffer < 0) {
+                (geometry && geometry.type !== 'polygon' && buffer < 1) ||
+                buffer < 0) {
                 domClass.replace(this.bufferGroup, 'has-error', 'has-success');
             } else {
                 domClass.replace(this.bufferGroup, 'has-success', 'has-error');
             }
 
             //update ui
-            var css = this.reportParams.get('geometry') === null ?
-                'glyphicon-exclamation-sign red' :
-                'glyphicon-ok-sign green';
-            domClass.replace(this.geometryStatus, 'glyphicon ' + css);
+            var css = this._getCssState(function(v) {
+                return v === null;
+            }, this.reportParams.get('geometry'));
+
+            domClass.replace(this.geometryStatus, css);
 
             // point | multipoint | polyline | polygon | extent
             if (!geometry || (geometry.type !== 'polygon' && buffer < 1) || buffer < 0) {
                 return false;
             }
 
-            var area = this.getAreaOfExtent(geometry.getExtent(), buffer),
-                acceptableArea = area <= AGRC.extentMaxArea;
+            var acceptableArea = false,
+                area = 0;
 
-            css = acceptableArea ? 'glyphicon-ok-sign green' : 'glyphicon-exclamation-sign red';
-            domClass.replace(this.geometrySize, 'glyphicon ' + css);
+            if (lang.isArray(geometry)) {
+                acceptableArea = true;
+            } else {
+                area = this.getAreaOfExtent(geometry.getExtent(), buffer);
+                acceptableArea = area <= config.extentMaxArea;
+            }
+
+            css = this._getCssState(function(v) {
+                return !v;
+            }, acceptableArea);
+
+            domClass.replace(this.geometrySize, css);
 
             if (!acceptableArea) {
-                var percentOver = ((area - AGRC.extentMaxArea) / area) * 100;
+                var percentOver = ((area - config.extentMaxArea) / area) * 100;
                 this.geometryText.innerHTML = 'Shape is too large. Reduce your shape by ' +
                     Math.round(percentOver * 100) / 100 + '%.';
 
@@ -212,14 +240,35 @@ define([
 
             return true;
         },
-        setGeometry: function(geom) {
+        _getCssState: function(func, value) {
+            // summary:
+            //      returns css state
+            // func, value
+            console.log('app._ReportGeometryWizardPane::_getCssState', arguments);
+
+            var state = func(value);
+
+            return state ?
+                'glyphicon glyphicon-exclamation-sign red' :
+                'glyphicon glyphicon-ok-sign green';
+
+        },
+        setGeometry: function(feature) {
             // summary:
             //      topic subscription to geometry drawing
-            // geom: the geometry of the shape to use for the report
+            // feature: the feature containing the geometry of the shape to use for the report
             console.log('app._ReportGeometryWizardPane::setGeometry', arguments);
 
             // set the geometry
-            this.reportParams.set('geometry', geom);
+            if (lang.isArray(feature)) {
+                var geoms = array.map(feature, function(f) {
+                    return f.geometry;
+                });
+
+                this.reportParams.set('geometry', geoms);
+            } else {
+                this.reportParams.set('geometry', feature.geometry);
+            }
             this.reportParams.set('shapefile', false);
         },
         getAreaOfExtent: function(extent, buffer) {
@@ -254,7 +303,7 @@ define([
             domClass.add(this.uploadActitvity, 'progress progress-striped active');
 
             esriRequest({
-                url: AGRC.urls.uploadUrl,
+                url: config.urls.uploadUrl,
                 form: this.uploadForm,
                 content: {
                     f: 'json'
@@ -262,6 +311,117 @@ define([
                 handleAs: 'json'
             }).then(lang.hitch(this, '_setUploadedFileId'),
                 lang.hitch(this, '_uploadError'));
+        },
+        fetchPinGeometries: function() {
+            // summary:
+            //      query udot feature service for point and line geometries
+            console.log('app._ReportGeometryWizardPane::fetchPinGeometries', arguments);
+            if (!this.numbersOnly.test(this.pinNumber.value) || this.pinNumber.value < 0) {
+                domClass.replace(this.pinGroup, 'has-error', 'has-success');
+                this.fetchStatus.innerHTML = 'PIN\'s should be postive integers.';
+
+                return;
+            }
+
+            domAttr.set(this.fetchButton, 'disabled', true);
+            this.fetchStatus.innerHTML = '';
+
+            domClass.replace(this.pinGroup, 'has-success', 'has-error');
+
+            var params = {
+                where: 'PIN = ' + this.pinNumber.value,
+                returnGeometry: true,
+                outFields: ['PIN_DESC'],
+                f: 'json'
+            };
+
+            all([esriRequest({
+                    url: config.urls.udotFeatureService + '/0/query',
+                    content: params,
+                    handleAs: 'json'
+                }),
+                esriRequest({
+                    url: config.urls.udotFeatureService + '/1/query',
+                    content: params,
+                    handleAs: 'json'
+                })
+            ]).then(lang.hitch(this, '_flattenFeaturesForDisplay'),
+                lang.hitch(this, 'onFetchPinFail'));
+        },
+        onFetchPinFail: function(value) {
+            // summary:
+            //      failure handler for feting udot pins
+            // value: the text to place in the error message.
+            console.log('app.GeometryFromRoute::onFetchPinFail', arguments);
+
+            domAttr.remove(this.fetchButton, 'disabled');
+            this.fetchStatus.innerHTML = value || 'There was a problem querying the UDOT service.';
+
+        },
+        _flattenFeaturesForDisplay: function(queryResults) {
+            // summary:
+            //      gets the promise results from quering the udot feature service
+            //      takes the points and paths and flattens them into one feature for each geometyr type
+            // queryResults
+            console.log('app._ReportGeometryWizardPane::_flattenFeaturesForDisplay', arguments);
+
+            domAttr.set(this.fetchButton, 'disabled', false);
+
+            var graphics = [];
+
+            array.forEach(queryResults, function(result) {
+                if (!result.geometryType) {
+                    return;
+                }
+
+                var features = array.map(result.features, function(feature) {
+                    feature.geometry.spatialReference = result.spatialReference;
+
+                    return feature;
+                });
+
+                var feature;
+
+                if (result.geometryType === 'esriGeometryMultipoint') {
+
+                    var points = array.map(features, function(point) {
+                        return point.geometry.points;
+                    });
+
+                    points = [].concat.apply([], points);
+
+                    feature = features[0];
+                    feature.geometry.points = points;
+                    feature.geometry.type = 'multipoint';
+
+                    graphics.push(feature);
+                } else {
+                    var paths = array.map(features, function(point) {
+                        return point.geometry.paths;
+                    });
+
+                    paths = [].concat.apply([], paths);
+
+                    feature = features[0];
+                    feature.geometry.paths = paths;
+                    feature.geometry.type = 'polyline';
+
+                    graphics.push(feature);
+                }
+            });
+
+            if( graphics.length < 1){
+                return this.onFetchPinFail('No geometries found for PIN.');
+            }
+
+            var title = graphics[0].attributes.PIN_DESC;
+
+            if (graphics.length === 1) {
+                graphics = graphics[0];
+            }
+
+            topic.publish(config.topics.updateTitle, title);
+            topic.publish(config.topics.publishGraphic, graphics);
         },
         _setUploadedFileId: function(response) {
             // summary:
@@ -299,6 +459,7 @@ define([
             console.log('app._ReportGeometryWizardPane::toolChoice', arguments);
 
             var data = this.getDataFromButtonClick(evt);
+            this.toolChoiceValue = data.value;
 
             if (this.activeTool) {
                 domClass.remove(this.activeTool, 'btn-primary');
@@ -308,21 +469,31 @@ define([
             domClass.add(this.activeTool, 'btn-primary');
 
             if (data.value === 'shapefile') {
-                topic.publish('app/enable-tool', 'shapefile');
+                topic.publish(config.topics.enableTool, 'shapefile');
 
                 this.reportParams.set('shapefile', true);
                 this.reportParams.geometry = null;
 
                 domClass.remove(this.shapefileGroup, 'hidden');
                 domClass.add(this.drawingGroup, 'hidden');
+                domClass.add(this.pinGroup, 'hidden');
+
+                return;
+            } else if (data.value === 'pin') {
+                this.reportParams.geometry = null;
+
+                domClass.add(this.shapefileGroup, 'hidden');
+                domClass.remove(this.drawingGroup, 'hidden');
+                domClass.remove(this.pinGroup, 'hidden');
 
                 return;
             }
 
             domClass.add(this.shapefileGroup, 'hidden');
+            domClass.add(this.pinGroup, 'hidden');
             domClass.remove(this.drawingGroup, 'hidden');
 
-            topic.publish('app/enable-tool', data.value);
+            topic.publish(config.topics.enableTool, data.value);
 
             return data.value;
         },
@@ -332,7 +503,7 @@ define([
             //
             console.log('app._ReportGeometryWizardPane::onHide', arguments);
 
-            topic.publish('app/enable-tool');
+            topic.publish(config.topics.enableTool);
         },
         _uploadError: function(e) {
             // summary:

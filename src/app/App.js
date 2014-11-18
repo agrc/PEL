@@ -14,7 +14,12 @@ define([
 
     'esri/toolbars/draw',
     'esri/graphic',
+    'esri/graphicsUtils',
     'esri/symbols/SimpleLineSymbol',
+    'esri/symbols/SimpleMarkerSymbol',
+
+    'esri/geometry/Multipoint',
+    'esri/geometry/Polyline',
 
     'agrc/widgets/map/BaseMap',
     'agrc/widgets/locate/FindAddress',
@@ -49,7 +54,12 @@ define([
 
     Draw,
     Graphic,
+    graphicUtils,
     SimpleLineSymbol,
+    SimpleMarkerSymbol,
+
+    Multipoint,
+    Polyline,
 
     BaseMap,
     FindAddress,
@@ -181,15 +191,15 @@ define([
             //
             console.log('app.app::setupConnections', arguments);
 
-            this.subscribe('app/enable-tool', lang.hitch(this, 'activateTool'));
-            this.subscribe('app/wizard-reset', lang.hitch(this, 'removeGraphic'));
-            this.subscribe('app/publish-graphic', lang.hitch(this, 'publishGraphic'));
+            this.subscribe(config.topics.enableTool, lang.hitch(this, 'activateTool'));
+            this.subscribe(config.topics.resetWizard, lang.hitch(this, 'removeGraphic'));
+            this.subscribe(config.topics.publishGraphic, lang.hitch(this, 'publishGraphic'));
 
             this.drawingToolbar.on('draw-end', lang.hitch(this, 'publishGraphic'));
         },
         activateTool: function(tool) {
             // summary:
-            //      handles the topic app/enable-tool
+            //      handles the topic config.topics.enableTool
             // tool: string: route-mile-post, line, polygon
             console.log('app.app::activateTool', arguments);
 
@@ -223,21 +233,66 @@ define([
             // evt
             console.log('app.app::publishGraphic', arguments);
 
-            if (!evt || !evt.geometry) {
-                return;
-            }
-
             if (this.activeGraphic) {
-                this.map.graphics.remove(this.activeGraphic);
+                if (lang.isArray(this.activeGraphic)) {
+                    array.forEach(this.activeGraphic, function() {
+                        this.map.graphics.remove(this.activeGraphic);
+                    }, this);
+                } else {
+                    this.map.graphics.remove(this.activeGraphic);
+                }
+
                 this.activeGraphic = null;
             }
 
-            this.activeGraphic = new Graphic(evt.geometry, this.graphicSymbol);
+            var symbology = this.graphicSymbol;
+            var geometry = evt.geometry;
+            var extent;
 
-            this.map.setExtent(this.activeGraphic.geometry.getExtent(), true);
-            this.map.graphics.add(this.activeGraphic);
+            if (lang.isArray(evt)) {
+                this.activeGraphic = array.map(evt, function(feature) {
+                    var symbology = this.graphicSymbol;
+                    var geometry;
 
-            topic.publish('app/report-wizard-geometry', this.activeGraphic.geometry);
+                    if (feature.geometry.type && feature.geometry.type === 'multipoint') {
+                        symbology = this.graphicSymbolPoint;
+                        geometry = new Multipoint(feature.geometry);
+                    } else if (feature.geometry.type && feature.geometry.type === 'polyline') {
+                        geometry = new Polyline(feature.geometry);
+                    }
+
+                    return new Graphic(geometry, symbology);
+                }, this);
+
+                extent = graphicUtils.graphicsExtent(this.activeGraphic);
+            } else {
+                if (!evt && !evt.geometry) {
+                    return;
+                }
+
+                if (evt.geometry.type && evt.geometry.type === 'multipoint') {
+                    symbology = this.graphicSymbolPoint;
+                    geometry = new Multipoint(geometry);
+                } else if (evt.geometry.type && evt.geometry.type === 'polyline') {
+                    geometry = new Polyline(geometry);
+                }
+
+                this.activeGraphic = new Graphic(geometry, symbology);
+
+                extent = this.activeGraphic.geometry.getExtent();
+            }
+
+            this.map.setExtent(extent, true);
+
+            if (lang.isArray(this.activeGraphic)) {
+                array.forEach(this.activeGraphic, function(graphic) {
+                    this.map.graphics.add(graphic);
+                }, this);
+            } else {
+                this.map.graphics.add(this.activeGraphic);
+            }
+
+            topic.publish(config.topics.notifyWizardOfGeometry, this.activeGraphic);
         },
         initMap: function() {
             // summary:
@@ -251,6 +306,10 @@ define([
 
             this.graphicSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
                 new Color('428bca'), 3);
+            this.graphicSymbolPoint = new SimpleMarkerSymbol();
+            this.graphicSymbolPoint.setStyle(SimpleMarkerSymbol.STYLE_CIRCLE);
+            this.graphicSymbolPoint.setSize(10);
+            this.graphicSymbolPoint.setColor(new Color('428bca'));
 
             var selector;
 

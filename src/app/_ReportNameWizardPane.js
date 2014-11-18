@@ -4,16 +4,20 @@ define([
     'dojo/_base/declare',
 
     'dojo/Stateful',
+    'dojo/topic',
 
-    'app/_ReportWizardPaneBaseMixin'
+    'app/_ReportWizardPaneBaseMixin',
+    'app/config'
 ], function(
     template,
 
     declare,
 
     Stateful,
+    topic,
 
-    _WizardPaneBase
+    _WizardPaneBase,
+    config
 ) {
     // summary:
     //      A mixin for shared code between the panes in LoginRegistration
@@ -31,6 +35,12 @@ define([
                     this.name = value.toLowerCase();
                 }
             });
+
+            var self = this;
+            this.own(topic.subscribe(config.topics.updateTitle, function(value){
+                self.reportTitle.value = value;
+                self.reportParams.set('name', value);
+            }));
         },
         validate: function() {
             // summary:
