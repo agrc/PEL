@@ -192,15 +192,29 @@ define([
             /* jshint +W106 */
 
             if (data.geometry) {
-                graphic = new Graphic(data.geometry);
                 featureSet = new FeatureSet();
-
-                features.push(graphic);
+                if (lang.isArray(data.geometry)) {
+                    array.forEach(data.geometry, function(geometry){
+                        var g = new Graphic(geometry);
+                        features.push(g);
+                    });
+                } else {
+                    graphic = new Graphic(data.geometry);
+                    features.push(graphic);
+                }
                 featureSet.features = features;
                 /* jshint -W106 */
                 gpObject.Dynamic_Project_Drawing = featureSet;
 
-                if (graphic.geometry.type === 'polyline') {
+                var isPolylines = array.some(featureSet.features, function(graphic){
+                    return graphic.geometry.type === 'polyline';
+                });
+
+                var isMultipoint = array.some(featureSet.features, function(graphic){
+                    return graphic.geometry.type === 'multipoint';
+                });
+
+                if (isPolylines || isMultipoint) {
                     gpObject.Buffer_Distance = data.buffer;
                     gpObject.Line_Source_Option = sourceOptions.userDrawn;
                     gpObject.Polygon_Source_Option = sourceOptions.noData;

@@ -2,10 +2,10 @@
 <html>
 <head>
     <title>TEST: ReportGeneratorWizard</title>
-    
+
     <!-- <link rel='stylesheet' href='http://js.arcgis.com/3.7/js/dojo/dijit/themes/claro/claro.css'>
     <link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.7/js/esri/css/esri.css" /> -->
-    <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="../../bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <link rel='stylesheet' href='../../app/resources/app.css'>
     <link rel="stylesheet" href='../../app/resources/ReportGeneratorWizard.css'>
     <style>
@@ -42,6 +42,8 @@
         'app/_ReportNameWizardPane',
         'app/_ReportWizardControlPanel',
 
+        'app/config',
+
         'dojo/dom',
         'dojo/topic',
         'dojo/on',
@@ -55,6 +57,8 @@
         Pane2,
         Pane3,
         Controls,
+
+        config,
 
         dom,
         topic,
@@ -77,7 +81,7 @@
             resultName: 'url'
         }, 'contentNode');
 
-        topic.subscribe('app/enable-tool', function(tool) {
+        topic.subscribe(config.topics.enableTool, function(tool) {
             dom.byId('publish').innerHTML = tool;
         });
 
@@ -110,7 +114,7 @@
             });
 
         on(dom.byId("btn"), "click", function() {
-            topic.publish('app/report-wizard-geometry', polyline);
+            topic.publish(config.topics.notifyWizardOfGeometry, polyline);
         });
     });
 </script>
@@ -127,8 +131,8 @@
     <div id="pane3"></div>
     <div id="controls"></div>
 
-    <script src="../../jquery/jquery.js"></script>
+    <script src="../../jquery/dist/jquery.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="../../bootstrap/js/bootstrap.js"></script>
+    <script src="../../bootstrap/dist/js/bootstrap.js"></script>
 </body>
 </html>

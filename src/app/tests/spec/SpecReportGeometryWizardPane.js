@@ -9,8 +9,9 @@ require([
     'dojo/topic',
 
     'esri/geometry/Polyline',
-    'esri/geometry/Polygon'
+    'esri/geometry/Polygon',
 
+    'app/config'
 ], function(
     WidgetUnderTest,
 
@@ -22,7 +23,9 @@ require([
     topic,
 
     Polyline,
-    Polygon
+    Polygon,
+
+    config
 ) {
     describe('app/_ReportGeometryWizardPane', function() {
         var testWidget,
@@ -230,7 +233,7 @@ require([
                 testWidget.reportParams.shapefile = true;
 
                 spyOn(testWidget, 'validate');
-                topic.publish('app/report-wizard-geometry', goodPolyline);
+                topic.publish(config.topics.notifyWizardOfGeometry, {geometry:goodPolyline});
 
                 expect(testWidget.reportParams.geometry).toEqual(goodPolyline);
                 expect(testWidget.reportParams.shapefile).toEqual(false);
@@ -248,7 +251,7 @@ require([
             });
 
             it('publishes an event to app to take control for everything but shapefile', function() {
-                topic.subscribe('app/enable-tool', t.handler);
+                topic.subscribe(config.topics.enableTool, t.handler);
 
                 var node = domConstruct.create('button');
                 domAttr.set(node, 'data-prop', 'tool');

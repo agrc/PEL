@@ -35,7 +35,16 @@ define([
             mainReport: baseUrl + '/PEL_Main',
             catexReport: baseUrl + '/PEL_CatEx',
             routeMilepost: baseUrl + '/Milepost_Segment',
-            uploadUrl: baseUrl + '/uploads/upload'
+            uploadUrl: baseUrl + '/uploads/upload',
+            udotFeatureService: '//maps.udot.utah.gov/arcgis/rest/services/EPM_Projects/FeatureServer'
+        },
+
+        topics:{
+            updateTitle: 'app/update-title',
+            publishGraphic: 'app/publish-graphic',
+            resetWizard: 'app/wizard-reset',
+            enableTool: 'app/enable-tool',
+            notifyWizardOfGeometry: 'app/report-wizard-geometry'
         }
     };
 

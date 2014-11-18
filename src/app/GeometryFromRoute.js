@@ -17,6 +17,7 @@ define([
     'esri/tasks/Geoprocessor',
 
     'app/data/routes',
+    'app/config',
 
     'jquery/jquery'
 ], function(
@@ -37,7 +38,8 @@ define([
 
     Geoprocessor,
 
-    routes
+    routes,
+    config
 ) {
     return declare([_WidgetBase, _TemplatedMixin], {
         baseClass: 'geometry-from-route',
@@ -226,7 +228,7 @@ define([
 
             var feature = response.result.value.features[0];
 
-            topic.publish('app/publish-graphic', feature);
+            topic.publish(config.topics.publishGraphic, feature);
         }
     });
 });
