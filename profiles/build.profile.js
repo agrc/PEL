@@ -40,7 +40,12 @@ var profile = {
             'spin': 'ladda/dist/spin'
         }
     },
-    packages: ['dgrid', 'put-selector', 'xstyle','mustache'],
+    packages: ['dgrid', 'put-selector', 'xstyle',
+    {
+        name: 'mustache',
+        location: 'mustache',
+        main: 'mustache'
+    }],
     staticHasFeatures: {
         // The trace & log APIs are used for debugging the loader, so we don’t need them in the build
         'dojo-trace-api': 0,
