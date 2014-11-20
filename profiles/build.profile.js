@@ -9,8 +9,8 @@ var profile = {
     action: 'release',
     cssOptimize: 'comments',
     mini: true,
-    optimize: 'closure',
-    layerOptimize: 'closure',
+    optimize: 'uglify',
+    layerOptimize: 'uglify',
     stripConsole: 'all',
     selectorEngine: 'acme',
     layers: {
@@ -40,7 +40,7 @@ var profile = {
             'spin': 'ladda/dist/spin'
         }
     },
-    packages: ['dgrid', 'put-selector', 'xstyle'],
+    packages: ['dgrid', 'put-selector', 'xstyle','mustache'],
     staticHasFeatures: {
         // The trace & log APIs are used for debugging the loader, so we don’t need them in the build
         'dojo-trace-api': 0,

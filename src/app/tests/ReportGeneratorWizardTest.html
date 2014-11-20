@@ -114,7 +114,7 @@
             });
 
         on(dom.byId("btn"), "click", function() {
-            topic.publish(config.topics.notifyWizardOfGeometry, polyline);
+            topic.publish(config.topics.notifyWizardOfGeometry, {geometry:polyline});
         });
     });
 </script>

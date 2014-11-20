@@ -8,6 +8,7 @@ define([
     'dojo/promise/all',
 
     'dojo/dom-class',
+    'dojo/dom-attr',
 
     'dojo/on',
     'dojo/Stateful',
@@ -29,6 +30,7 @@ define([
     all,
 
     domClass,
+    domAttr,
 
     on,
     Stateful,
@@ -199,10 +201,11 @@ define([
             }
 
             //update ui
-            var css = this.reportParams.get('geometry') === null ?
-                'glyphicon-exclamation-sign red' :
-                'glyphicon-ok-sign green';
-            domClass.replace(this.geometryStatus, 'glyphicon ' + css);
+            var css = this._getCssState(function(v) {
+                return v === null;
+            }, this.reportParams.get('geometry'));
+
+            domClass.replace(this.geometryStatus, css);
 
             // point | multipoint | polyline | polygon | extent
             if (!geometry || (geometry.type !== 'polygon' && buffer < 1) || buffer < 0) {
@@ -219,8 +222,11 @@ define([
                 acceptableArea = area <= config.extentMaxArea;
             }
 
-            css = acceptableArea ? 'glyphicon-ok-sign green' : 'glyphicon-exclamation-sign red';
-            domClass.replace(this.geometrySize, 'glyphicon ' + css);
+            css = this._getCssState(function(v) {
+                return !v;
+            }, acceptableArea);
+
+            domClass.replace(this.geometrySize, css);
 
             if (!acceptableArea) {
                 var percentOver = ((area - config.extentMaxArea) / area) * 100;
@@ -234,6 +240,19 @@ define([
 
             return true;
         },
+        _getCssState: function(func, value) {
+            // summary:
+            //      returns css state
+            // func, value
+            console.log('app._ReportGeometryWizardPane::_getCssState', arguments);
+
+            var state = func(value);
+
+            return state ?
+                'glyphicon glyphicon-exclamation-sign red' :
+                'glyphicon glyphicon-ok-sign green';
+
+        },
         setGeometry: function(feature) {
             // summary:
             //      topic subscription to geometry drawing
@@ -241,14 +260,13 @@ define([
             console.log('app._ReportGeometryWizardPane::setGeometry', arguments);
 
             // set the geometry
-            if(lang.isArray(feature)){
-                var geoms = array.map(feature, function(f){
+            if (lang.isArray(feature)) {
+                var geoms = array.map(feature, function(f) {
                     return f.geometry;
                 });
 
                 this.reportParams.set('geometry', geoms);
-            }
-            else{
+            } else {
                 this.reportParams.set('geometry', feature.geometry);
             }
             this.reportParams.set('shapefile', false);
@@ -300,8 +318,13 @@ define([
             console.log('app._ReportGeometryWizardPane::fetchPinGeometries', arguments);
             if (!this.numbersOnly.test(this.pinNumber.value) || this.pinNumber.value < 0) {
                 domClass.replace(this.pinGroup, 'has-error', 'has-success');
+                this.fetchStatus.innerHTML = 'PIN\'s should be postive integers.';
+
                 return;
             }
+
+            domAttr.set(this.fetchButton, 'disabled', true);
+            this.fetchStatus.innerHTML = '';
 
             domClass.replace(this.pinGroup, 'has-success', 'has-error');
 
@@ -323,7 +346,17 @@ define([
                     handleAs: 'json'
                 })
             ]).then(lang.hitch(this, '_flattenFeaturesForDisplay'),
-                lang.hitch(this, '_uploadError'));
+                lang.hitch(this, 'onFetchPinFail'));
+        },
+        onFetchPinFail: function(value) {
+            // summary:
+            //      failure handler for feting udot pins
+            // value: the text to place in the error message.
+            console.log('app.GeometryFromRoute::onFetchPinFail', arguments);
+
+            domAttr.remove(this.fetchButton, 'disabled');
+            this.fetchStatus.innerHTML = value || 'There was a problem querying the UDOT service.';
+
         },
         _flattenFeaturesForDisplay: function(queryResults) {
             // summary:
@@ -331,6 +364,8 @@ define([
             //      takes the points and paths and flattens them into one feature for each geometyr type
             // queryResults
             console.log('app._ReportGeometryWizardPane::_flattenFeaturesForDisplay', arguments);
+
+            domAttr.set(this.fetchButton, 'disabled', false);
 
             var graphics = [];
 
@@ -374,6 +409,10 @@ define([
                     graphics.push(feature);
                 }
             });
+
+            if( graphics.length < 1){
+                return this.onFetchPinFail('No geometries found for PIN.');
+            }
 
             var title = graphics[0].attributes.PIN_DESC;
 

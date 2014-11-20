@@ -16,9 +16,10 @@
         <div class="input-group">
             <input type="text" id="${id}_pin" class="form-control" data-dojo-attach-point='pinNumber' />
             <span class="input-group-btn">
-                <button class="btn btn-default" type='button' data-dojo-attach-event='click: fetchPinGeometries'>Fetch Geometries</button>
+                <button class="btn btn-default" type='button' data-dojo-attach-point='fetchButton' data-dojo-attach-event='click: fetchPinGeometries'>Fetch Geometries</button>
             </span>
         </div>
+        <div data-dojo-attach-point='fetchStatus' class="alert alert-danger text-center"></div>
     </div>
     <div class='form-group' data-dojo-attach-point='shapefileGroup'>
         <label for='exampleInputFile'>Shapefile Bundle:</label>
