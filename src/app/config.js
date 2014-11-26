@@ -32,8 +32,7 @@ define([
             baseUrl: baseUrl,
             securedServicesBaseUrl: baseUrl,
             vector: '//mapserv.utah.gov/arcgis/rest/services/BaseMaps/Vector/MapServer',
-            mainReport: baseUrl + '/PEL_Main',
-            catexReport: baseUrl + '/PEL_CatEx',
+            report: baseUrl + '/PEL%20Report%20for%20the%20Web',
             routeMilepost: baseUrl + '/Milepost_Segment',
             uploadUrl: baseUrl + '/uploads/upload',
             udotFeatureService: '//maps.udot.utah.gov/arcgis/rest/services/EPM_Projects/FeatureServer'

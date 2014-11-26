@@ -15,6 +15,8 @@ define([
     'app/_ReportNameWizardPane',
     'app/_ReportWizardAsyncGeoprocessing',
 
+    'app/config',
+
     'esri/tasks/FeatureSet',
     'esri/graphic',
 
@@ -36,6 +38,8 @@ define([
     GeometryPane,
     NamePane,
     AsyncGp,
+
+    config,
 
     FeatureSet,
     Graphic
@@ -63,6 +67,8 @@ define([
             // summary:
             //      dom is ready
             console.info('app.ReportGeneratorWizard::postCreate', arguments);
+
+            this.url = config.urls.report;
 
             this.inherited(arguments);
 
@@ -126,8 +132,6 @@ define([
 
             var data = this.collectData();
 
-            this.initReportType(data);
-
             var gpData = this.transformData(data);
 
             this.submitJob(gpData);
@@ -158,102 +162,59 @@ define([
             // data: object
             //      the data collected from the wizard panes
             console.log('app.ReportGeneratorWizard::transformData', arguments);
-            var sourceOptions = {
-                    noData: 0,
-                    shapefile: 1,
-                    folderWithShapefiles: 2,
-                    userDrawn: 3
-                },
-                inputFields = {
-                    normal: 0,
-                    userInput: 1,
-                    attributes: 2
-                };
 
-            //Set units to feet
-            var units = 'feet',
-                reportName = data.name,
-                prjID = this.planner.name,
-                features = [],
-                graphic = null,
-                featureSet = null;
-
-            /* jshint -W106 */
             var gpObject = {
-                Project_Name: reportName,
-                Project_ID: prjID,
-                Units_for_Buffer_Distance: units,
-                Buffer_Distance: 0,
-                Line_Source_Option: sourceOptions.noData,
-                Polygon_Source_Option: sourceOptions.userDrawn,
-                Input_Fields: inputFields.userInput,
-                Planner: this.planner.email
+                bufferDistance: 0,
+                multipoints: null,
+                polygons: null,
+                planner: this.planner.email,
+                polylines: null,
+                projectId: this.planner.name,
+                projectName: data.name,
+                reportType: data.type === 'catex' ? 0 : 1,
+                zipFile: null
             };
-            /* jshint +W106 */
 
             if (data.geometry) {
-                featureSet = new FeatureSet();
+                var multipoints = new FeatureSet();
+                var polylines = new FeatureSet();
+                var polygons = new FeatureSet();
+
                 if (lang.isArray(data.geometry)) {
-                    array.forEach(data.geometry, function(geometry){
+                    array.forEach(data.geometry, function(geometry) {
                         var g = new Graphic(geometry);
-                        features.push(g);
-                    });
+                        this._addToFeatureSet(g, multipoints.features, polylines.features, polygons.features);
+                    }, this);
                 } else {
-                    graphic = new Graphic(data.geometry);
-                    features.push(graphic);
+                    var g = new Graphic(data.geometry);
+                    this._addToFeatureSet(g, multipoints.features, polylines.features, polygons.features);
                 }
-                featureSet.features = features;
-                /* jshint -W106 */
-                gpObject.Dynamic_Project_Drawing = featureSet;
 
-                var isPolylines = array.some(featureSet.features, function(graphic){
-                    return graphic.geometry.type === 'polyline';
-                });
+                gpObject.multipoints = multipoints;
+                gpObject.polygons = polygons;
+                gpObject.polylines = polylines;
 
-                var isMultipoint = array.some(featureSet.features, function(graphic){
-                    return graphic.geometry.type === 'multipoint';
-                });
-
-                if (isPolylines || isMultipoint) {
-                    gpObject.Buffer_Distance = data.buffer;
-                    gpObject.Line_Source_Option = sourceOptions.userDrawn;
-                    gpObject.Polygon_Source_Option = sourceOptions.noData;
-                    gpObject.Input_Fields = inputFields.userInput;
-                }
-                /* jshint +W106 */
                 return gpObject;
             } else {
                 //send both as shapefile and figure out in python gp.
-                /* jshint -W106 */
-                gpObject.Line_Source_Option = sourceOptions.shapefile;
-                gpObject.Polygon_Source_Option = sourceOptions.shapefile;
-                gpObject.zip = data.zip;
+                gpObject.zipFile = data.zip;
                 /* jshint +W106 */
             }
 
             return gpObject;
         },
-        initReportType: function(data) {
+        _addToFeatureSet: function(graphic, polylines, multipoints, polygons) {
             // summary:
-            //      sets up the gp for the report type
-            //      this mucks with the gp internals and could easily break
-            console.log('app.ReportGeneratorWizard::initReportType', arguments);
+            //      adds the graphic to the right feature set
+            // graphic, polylines, multipoints, polygons
+            console.log('app.ReportGeneratorWizard::_addToFeatureSet', arguments);
 
-            if (data.shapefile) {
-                return data.type === 'catex' ? AGRC.urls.catexReport : AGRC.urls.mainReport;
-            }
-
-            if (data.type === 'catex') {
-                this.gp.url = AGRC.urls.catexReport;
-
-                if (!this.gp._url) {
-                    this.gp._url = {
-                        path: null,
-                        query: null
-                    };
-                }
-
-                this.gp._url.path = AGRC.urls.catexReport;
+            if (graphic.geometry.type === 'polyline') {
+                polylines.push(graphic);
+            } else if (graphic.geometry.type === 'multipoint') {
+                multipoints.push(graphic);
+            } else if (graphic.geometry.type === 'polygon') {
+                polygons.push(graphic);
             }
         }
     });
