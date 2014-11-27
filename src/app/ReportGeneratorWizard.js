@@ -164,57 +164,57 @@ define([
             console.log('app.ReportGeneratorWizard::transformData', arguments);
 
             var gpObject = {
-                bufferDistance: 0,
-                multipoints: null,
-                polygons: null,
+                bufferDistance: data.buffer,
+                multipoints: new FeatureSet(),
+                polygons: new FeatureSet(),
                 planner: this.planner.email,
-                polylines: null,
-                projectId: this.planner.name,
+                polylines: new FeatureSet(),
+                projectId: this.planner.first + this.planner.last,
                 projectName: data.name,
                 reportType: data.type === 'catex' ? 0 : 1,
                 zipFile: null
             };
 
             if (data.geometry) {
-                var multipoints = new FeatureSet();
-                var polylines = new FeatureSet();
-                var polygons = new FeatureSet();
-
                 if (lang.isArray(data.geometry)) {
                     array.forEach(data.geometry, function(geometry) {
                         var g = new Graphic(geometry);
-                        this._addToFeatureSet(g, multipoints.features, polylines.features, polygons.features);
+                        this._addToFeatureSet(g, gpObject);
                     }, this);
                 } else {
                     var g = new Graphic(data.geometry);
-                    this._addToFeatureSet(g, multipoints.features, polylines.features, polygons.features);
+                    this._addToFeatureSet(g, gpObject);
+                }
+            } else {
+                gpObject.zipFile = data.zip;
+            }
+
+            var clearNulls = function(featureSet){
+                if(featureSet.features.length === 0){
+                    return null;
                 }
 
-                gpObject.multipoints = multipoints;
-                gpObject.polygons = polygons;
-                gpObject.polylines = polylines;
+                return featureSet;
+            };
 
-                return gpObject;
-            } else {
-                //send both as shapefile and figure out in python gp.
-                gpObject.zipFile = data.zip;
-                /* jshint +W106 */
-            }
+            gpObject.polylines = clearNulls(gpObject.polylines);
+            gpObject.multipoints = clearNulls(gpObject.multipoints);
+            gpObject.polygons = clearNulls(gpObject.polygons);
 
             return gpObject;
         },
-        _addToFeatureSet: function(graphic, polylines, multipoints, polygons) {
+        _addToFeatureSet: function(graphic, gp) {
             // summary:
             //      adds the graphic to the right feature set
             // graphic, polylines, multipoints, polygons
             console.log('app.ReportGeneratorWizard::_addToFeatureSet', arguments);
 
             if (graphic.geometry.type === 'polyline') {
-                polylines.push(graphic);
+                gp.polylines.features.push(graphic);
             } else if (graphic.geometry.type === 'multipoint') {
-                multipoints.push(graphic);
+                gp.multipoints.features.push(graphic);
             } else if (graphic.geometry.type === 'polygon') {
-                polygons.push(graphic);
+                gp.polygons.features.push(graphic);
             }
         }
     });
