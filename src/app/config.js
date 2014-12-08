@@ -32,7 +32,7 @@ define([
             baseUrl: baseUrl,
             securedServicesBaseUrl: baseUrl,
             vector: '//mapserv.utah.gov/arcgis/rest/services/BaseMaps/Vector/MapServer',
-            report: baseUrl + 'WebReport',
+            report: baseUrl + '/WebReport',
             routeMilepost: baseUrl + '/Milepost_Segment',
             uploadUrl: baseUrl + '/uploads/upload',
             udotFeatureService: '//maps.udot.utah.gov/arcgis/rest/services/EPM_Projects/FeatureServer'
