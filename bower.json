@@ -1,6 +1,6 @@
 {
     "name": "udot-pel",
-    "version": "0.6.4-23c5ae3",
+    "version": "1.0.0-1",
     "dependencies": {
         "dojo": "1.10",
         "dojox": "1.10",
