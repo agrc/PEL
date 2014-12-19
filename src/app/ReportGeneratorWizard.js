@@ -169,7 +169,7 @@ define([
                 polygons: new FeatureSet(),
                 planner: this.planner.email,
                 polylines: new FeatureSet(),
-                projectId: this.planner.first + this.planner.last,
+                projectName: data.name,
                 reportType: data.type === 'catex' ? 0 : 1,
                 zipFile: null
             };
