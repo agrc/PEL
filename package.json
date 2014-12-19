@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "dojo": "^1.10.2",
+    "dojo": "^1.10",
     "grunt": "^0.4",
     "grunt-amdcheck": "^0",
     "grunt-bump": "^0",
